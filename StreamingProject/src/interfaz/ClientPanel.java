@@ -16,11 +16,10 @@ import javax.swing.Timer;
 
 import server.*;
 
-public class Client{
+public class ClientPanel extends JPanel{
 
     //GUI
     //----
-    JFrame f = new JFrame("Client");
     JButton setupButton = new JButton("Setup");
     JButton playButton = new JButton("Play");
     JButton pauseButton = new JButton("Pause");
@@ -89,17 +88,12 @@ public class Client{
     //--------------------------
     //Constructor
     //--------------------------
-    public Client() {
+    public ClientPanel() {
 
         //build GUI
         //--------------------------
      
-        //Frame
-        f.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
+        
 
         //Buttons
         buttonPanel.setLayout(new GridLayout(1,0));
@@ -135,9 +129,9 @@ public class Client{
         statLabel2.setBounds(0,350,380,20);
         statLabel3.setBounds(0,370,380,20);
 
-        f.getContentPane().add(mainPanel, BorderLayout.CENTER);
-        f.setSize(new Dimension(380,420));
-        f.setVisible(true);
+        add(mainPanel, BorderLayout.CENTER);
+        setSize(new Dimension(380,420));
+        setVisible(true);
 
         //init timer
         //--------------------------
@@ -161,7 +155,7 @@ public class Client{
     public static void main(String argv[]) throws Exception
     {
         //Create a Client object
-        Client theClient = new Client();
+        ClientPanel theClient = new ClientPanel();
         
         //get server RTSP port and IP address from the command line
         //------------------
