@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import javax.persistence.*;
 
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 import model.*;
 
 public class AdminDb {
@@ -36,21 +38,20 @@ public class AdminDb {
 	 */
 	private static String cadenaConexion;
 
+	private MysqlDataSource dataSource = new MysqlDataSource();
+	
 	public AdminDb() {
 		cadenaConexion="jdbc:mysql://localhost:3306/videostreamingdb";
 		usuario="root";
 		clave="1q2w3e4r5t";
+		dataSource.setUser(usuario);
+		dataSource.setPassword(clave);
+		dataSource.setServerName(cadenaConexion);
+		
 	}
 
 	private void establecerConexion() throws SQLException {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conexion = DriverManager.getConnection(cadenaConexion, usuario,
-					clave);
-
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		conexion= dataSource.getConnection();
 
 	}
 	public void closeConnection(Connection connection) throws Exception {

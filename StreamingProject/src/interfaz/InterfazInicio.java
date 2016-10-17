@@ -89,7 +89,7 @@ public class InterfazInicio extends JFrame
 	public void registrarse(String ip, String puerto, String login, String password) {
 		try
 		{
-			//cliente.registrar(ip, puerto, login, password);
+			cliente.registrar(ip, puerto, login, password);
 			
 			setVisible(false);
 			InterfazApp principal = new InterfazApp();
