@@ -8,9 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.persistence.*;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import model.*;
 
@@ -38,20 +35,21 @@ public class AdminDb {
 	 */
 	private static String cadenaConexion;
 
-	private MysqlDataSource dataSource = new MysqlDataSource();
-	
 	public AdminDb() {
-		cadenaConexion="jdbc:mysql://localhost:3306/videostreamingdb";
+		cadenaConexion="jdbc:mysql://localhost:3306/streamingDB";
 		usuario="root";
 		clave="1q2w3e4r5t";
-		dataSource.setUser(usuario);
-		dataSource.setPassword(clave);
-		dataSource.setServerName(cadenaConexion);
-		
 	}
 
 	private void establecerConexion() throws SQLException {
-		conexion= dataSource.getConnection();
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conexion = DriverManager.getConnection(cadenaConexion, usuario,
+					clave);
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 	}
 	public void closeConnection(Connection connection) throws Exception {
@@ -66,7 +64,7 @@ public class AdminDb {
 	
 	public boolean login(String usr, String pass) throws Exception{
 		PreparedStatement prepStmt = null;
-		String sql = "SELECT * FROM usuario u WHERE u.login = "+usr;
+		String sql = "SELECT * FROM USUARIO u WHERE u.login = "+usr;
 		System.out.println(sql);
 		establecerConexion();
 		prepStmt = conexion.prepareStatement(sql);
@@ -84,18 +82,12 @@ public class AdminDb {
 	
 	public boolean registrarse(String usr, String pass) throws Exception{
 		PreparedStatement prepStmt = null;
-		String sql = "INSERT INTO usuario VALUES('"+usr+"','"+pass+"')";
+		String sql = "INSERT INTO USUARIO VALUES('"+usr+"','"+pass+"')";
 		System.out.println(sql);
 		establecerConexion();
 		prepStmt = conexion.prepareStatement(sql);
-		ResultSet rs = prepStmt.executeQuery();
+		prepStmt.executeUpdate();
 		
-		if(rs.next()){
-			String password= rs.getString("password");
-			if(password.equals(pass)){
-				return true;
-			}
-		}
 		closeConnection(conexion);
 		return false;
 	}
@@ -103,7 +95,7 @@ public class AdminDb {
 	public ArrayList<Video> getAllVideos() throws Exception{
 		ArrayList<Video> retorno = new ArrayList<Video>();
 		PreparedStatement prepStmt = null;
-		String sql = "SELECT * FROM video";
+		String sql = "SELECT * FROM VIDEO";
 		System.out.println(sql);
 		establecerConexion();
 		prepStmt = conexion.prepareStatement(sql);
