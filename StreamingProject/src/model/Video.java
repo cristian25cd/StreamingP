@@ -33,6 +33,18 @@ public class Video {
 
 	}
 	
+	public Video(long id, java.sql.Date add_date, int duration, String format, String name, String url,
+			String user_login) {
+		this.add_date=add_date;
+		this.id=id;
+		this.duration=duration;
+		this.format=format;
+		this.name=name;
+		this.url=url;
+		this.user= new Usuario();
+		user.setLogin(user_login);
+	}
+
 	/**
 	 * @return the id
 	 */

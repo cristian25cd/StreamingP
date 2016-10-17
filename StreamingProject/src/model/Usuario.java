@@ -13,7 +13,6 @@ public class Usuario {
 	
 	private String password;
 	
-	private String nombre;
 	
 	@OneToMany
 	private List<Video> videos;
@@ -53,20 +52,6 @@ public class Usuario {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	/**
-	 * @return the nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
-
-	/**
-	 * @param nombre the nombre to set
-	 */
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	/**

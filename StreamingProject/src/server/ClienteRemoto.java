@@ -43,6 +43,7 @@ public class ClienteRemoto implements ActionListener {
     
     private BufferedReader RTSPBufferedReader;
 	private PrintWriter RTSPBufferedWriter;
+	private AdminDb adminDb;
 	static String VideoFileName; //video file requested from the client
     static int RTSP_ID = 123456; //ID of the RTSP session
     int RTSPSeqNb = 0; //Sequence number of RTSP messages within the session
@@ -81,6 +82,7 @@ public class ClienteRemoto implements ActionListener {
 		RTSPBufferedWriter = new PrintWriter(socket.getOutputStream(), true);
 		ClientIPAddr=RTSPsocket.getInetAddress();
         state = INIT;
+        adminDb= new AdminDb();
 
 		//init RTP sending Timer
         sendDelay = FRAME_PERIOD;
@@ -113,18 +115,36 @@ public class ClienteRemoto implements ActionListener {
 				}
 			}
 
-			private void procesar() {
+			private void procesar() throws Exception {
+				if(state==INIT){
+					String ln =RTSPBufferedReader.readLine();
+					String[]sln = ln.split("::");
+					if(ln.startsWith("REGISTRAR")){
+						if(adminDb.registrarse(sln[1], sln[2])){
+							RTSPBufferedWriter.write("OK");
+						}
+						else{
+							RTSPBufferedWriter.write("ERROR");
+						}
+					}
+					else if(ln.startsWith("INGRESAR")){
+						if(adminDb.login(sln[1], sln[2])){
+							RTSPBufferedWriter.write("OK");
+						}
+						else{
+							RTSPBufferedWriter.write("ERROR");
+						}
+					}
+					else{
+						System.out.println(ln);
+					}
+				}
 				//Wait for the SETUP message from the client
 		        int request_type;
 		        boolean done = false;
 		        while(!done) {
 		            request_type = parse_RTSP_request(); //blocking
-		    
-		            if(request_type == LOGIN)
-		            {
-		            	
-		            }
-		            else if (request_type == SETUP) {
+		            if (request_type == SETUP) {
 		                done = true;
 
 		                //update RTSP state
